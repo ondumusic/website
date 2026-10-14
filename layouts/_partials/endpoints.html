@@ -1,0 +1,10 @@
+{{- /* The endpoint list from data/endpoints.yaml, with a coloured badge per HTTP method */ -}}
+<ul class="endpoints">
+  {{- range hugo.Data.endpoints }}
+  <li>
+    <span class="method {{ lower .method }}">{{ .method }}</span>
+    <code>{{ .path }}</code>
+    <span class="what">{{ .text }}</span>
+  </li>
+  {{- end }}
+</ul>

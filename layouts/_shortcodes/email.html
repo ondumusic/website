@@ -1,0 +1,22 @@
+{{- /* Contact address from hugo.toml as a mailto link.
+       {{< email >}} shows the address; {{< email "Email me" >}} uses your own link text.
+       To keep it away from spam bots, the address is never written out in the page: it's
+       split in two and put back together by the script below. Without JavaScript, visitors
+       see "support (at) example.com". */ -}}
+{{- $text := .Get 0 -}}
+{{- with site.Params.email -}}
+{{- $parts := split . "@" -}}
+<a class="email" data-user="{{ index $parts 0 }}" data-domain="{{ index $parts 1 }}"
+  {{- with $text }} data-text="{{ . }}"{{ end }}>{{ index $parts 0 }} (at) {{ index $parts 1 }}</a>
+{{- if not ($.Page.Store.Get "email-script") }}{{ $.Page.Store.Set "email-script" true }}
+<script>
+  addEventListener('DOMContentLoaded', () => document.querySelectorAll('a.email').forEach(a => {
+    const address = a.dataset.user + '@' + a.dataset.domain;
+    a.href = 'mailto:' + address;
+    a.textContent = a.dataset.text || address;
+  }));
+</script>
+{{- end }}
+{{- else -}}
+<a href="#" class="todo">{{ $text | default "support@example.com" }}</a>
+{{- end -}}

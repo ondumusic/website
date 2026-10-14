@@ -1,0 +1,155 @@
+{{ define "main" }}
+  <main class="home">
+
+    {{/* 1. What it is */}}
+    <section class="intro">
+      <img class="icon" src="assets/app-icon.png" alt="Ondu app icon">
+      <h1>Your own music library, anywhere.</h1>
+      <p>
+        Ondu is a self-hosted music library with official apps for iPhone and macOS.
+        No third-party services, no analytics, no algorithms, no nonsense. I made it
+        for myself, but maybe you'll like it too.
+      </p>
+      <p class="get">
+        {{ partial "get-app.html" "link" }}
+        &nbsp;·&nbsp; <a href="setup.html">Set up the server</a>
+      </p>
+    </section>
+
+    {{/* Mac window (follows light/dark mode) with the iPhone in front of its corner */}}
+    <div class="hero-shot">
+      <picture class="window">
+        <source srcset="assets/screenshots/mac-main-dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="assets/screenshots/mac-main-light.webp" width="2000" height="1243"
+          alt="Ondu on the Mac, showing the albums grid with a sidebar for artists, albums, songs, downloads and playlists">
+      </picture>
+      <picture class="phone">
+        <source srcset="assets/screenshots/iphone-albums-framed-dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="assets/screenshots/iphone-albums-framed-light.webp" width="640" height="1308"
+          alt="The same albums grid on iPhone, with the mini player above the tab bar">
+      </picture>
+    </div>
+    <div class="appearance" role="group" aria-label="Screenshot appearance" hidden>
+      <button type="button" data-mode="light">Light</button>
+      <button type="button" data-mode="dark">Dark</button>
+    </div>
+    <script>
+      // Both screenshots follow the visitor's light/dark setting; these buttons override it.
+      (() => {
+        const sources = document.querySelectorAll('.hero-shot source');
+        const group = document.querySelector('.appearance');
+        const buttons = group.querySelectorAll('button');
+        const show = mode => {
+          sources.forEach(s => s.media = mode === 'dark' ? 'all' : 'not all');
+          buttons.forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
+        };
+        show(matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        buttons.forEach(b => b.addEventListener('click', () => show(b.dataset.mode)));
+        group.hidden = false;
+      })();
+    </script>
+
+    {{/* 2. Why it's nice */}}
+    <section class="themes">
+      <div>
+        <h2>Local-first</h2>
+        <p>
+          Ondu syncs your library metadata so browsing and searching your music
+          feels instant (and works offline for downloaded music too).
+        </p>
+      </div>
+      <div>
+        <h2>Privacy</h2>
+        <p>
+          It never talks to external services, so your music library and play
+          history only exists for you.
+        </p>
+      </div>
+      <div>
+        <h2>Native</h2>
+        <p>
+          The apps are written using SwiftUI on iPhone and a mix of SwiftUI and
+          AppKit on macOS, aiming to deliver the best experience.
+        </p>
+      </div>
+    </section>
+
+    {{/* Text sits in the empty corner above the shorter mini players (see .native in style.css) */}}
+    <section class="native">
+      <div class="copy">
+        <h2>A player for every size</h2>
+        <p class="muted">
+          If you're like me, you'll love the mini player. There's a version for
+          everyone, big and small. Always on top, if you want it to be. By default
+          tinted with the album artwork, but you can disable that if you want.
+        </p>
+      </div>
+
+      <div class="minis">
+        <figure>
+          <img src="assets/screenshots/mini-compact.webp" width="870" height="382" loading="lazy"
+            alt="Mini player at its smallest: artwork thumbnail, song title and playback buttons">
+          <figcaption>Compact</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/screenshots/mini-artwork.webp" width="870" height="870" loading="lazy"
+            alt="Square mini player showing album artwork with controls over it">
+          <figcaption>Artwork</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/screenshots/mini-controls.webp" width="870" height="1122" loading="lazy"
+            alt="Mini player with full album artwork and playback controls below">
+          <figcaption>Artwork and controls</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/screenshots/mini-up-next.webp" width="870" height="1870" loading="lazy"
+            alt="Tall mini player with artwork, controls and the Up Next queue">
+          <figcaption>With Up Next</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="api band">
+      <div>
+        <h2>A simple API to play with</h2>
+        <p class="muted">
+          The server comes with an API (with OpenAPI spec) included and you can
+          use it to access your music library, create playlists, and more. It's
+          really fun to play with and even supports annotations to persist
+          custom data.
+        </p>
+        <p><a href="api.html">Learn more about the API</a></p>
+      </div>
+      {{ partial "endpoints.html" . }}
+    </section>
+
+    {{/* 3. How to get it: two numbered steps, since the apps need a server */}}
+    <section class="start">
+      <h2>Get started</h2>
+      <p>Ondu comes in two parts: the server for your music, and the apps that play it.</p>
+      <ol class="get-steps">
+        <li>
+          <h3>Run the server</h3>
+          <p>
+            In Docker, on a NAS, your homelab or VPS. The setup guide takes you
+            through it in four steps.
+          </p>
+          <a class="button primary" href="setup.html">Read the setup guide</a>
+        </li>
+        <li>
+          <h3>Get the app</h3>
+          <p>
+            For iPhone with iOS 26.2 or later, or a Mac with macOS 15.7 or
+            later. Sign in with your own server's address.
+          </p>
+          {{ partial "get-app.html" "button" }}
+        </li>
+      </ol>
+      <p class="muted small">
+        The server also comes with a basic web player, for listening from any
+        browser.
+      </p>
+    </section>
+
+  </main>
+{{ end }}

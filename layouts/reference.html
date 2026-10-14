@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }} · {{ site.Title }}</title>
+  <meta name="description" content="{{ .Description }}">
+  <link rel="icon" type="image/png" href="{{ "assets/favicon.png" | relURL }}">
+  <link rel="apple-touch-icon" href="{{ "assets/apple-touch-icon.png" | relURL }}">
+  <style>
+    body { margin: 0; }
+    .back {
+      display: block; padding: 10px 16px; font: 14px -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #2a52f0; text-decoration: none; border-bottom: 1px solid #e6e6e6; background: #fff;
+    }
+    @media (prefers-color-scheme: dark) {
+      .back { color: #7c98ff; background: #161616; border-color: #2c2c2c; }
+    }
+  </style>
+</head>
+<body>
+  <a class="back" href="{{ "api.html" | relURL }}">← Ondu API guide</a>
+  <div id="reference"></div>
+
+  <!-- Renders static/openapi.json. Replace that file when the API changes. -->
+  <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.73.0"></script>
+  <script>
+    Scalar.createApiReference('#reference', {
+      url: '{{ "openapi.json" | relURL }}',
+      // The spec's server is "/", which would point at this website. Show the reader's own
+      // server instead, so the generated code samples have the right address.
+      servers: [{
+        url: 'https://{host}',
+        variables: { host: { default: 'music.example.com', description: 'Your Ondu Server' } }
+      }],
+      hideTestRequestButton: true,
+      hideClientButton: true,
+      // Hide Scalar's own extras (AI chat, MCP generator, developer toolbar)
+      agent: { disabled: true },
+      mcp: { disabled: true },
+      showDeveloperTools: 'never',
+      hideModels: false,
+      withDefaultFonts: false,
+      customCss: ':root { --scalar-font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }'
+    })
+  </script>
+</body>
+</html>

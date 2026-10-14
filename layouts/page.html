@@ -1,0 +1,13 @@
+{{ define "main" }}
+<main class="doc{{ with .Params.class }} {{ . }}{{ end }}">
+  <h1>{{ .Params.heading | default .Title }}</h1>
+  {{- if isset .Params "updated" }}
+  <p class="updated">Last updated {{ with .Params.updated }}{{ . | time.Format "2 January 2006" }}{{ else }}<span class="todo">date</span>{{ end }}</p>
+  {{- end }}
+  {{- with .Params.lead }}
+  <p class="lead">{{ . | markdownify }}</p>
+  {{- end }}
+
+  {{ .Content }}
+</main>
+{{ end }}

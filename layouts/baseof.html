@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ site.Title }}: {{ site.Params.tagline }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  {{- $description := .Description | default site.Params.description }}
+  <meta name="description" content="{{ $description }}">
+  <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:description" content="{{ $description }}">
+  {{- /* Link preview: the hero screenshots, made by tools/og-image.sh */}}
+  <meta property="og:image" content="{{ "assets/og-image.jpg" | absURL }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ondu on a Mac and an iPhone, showing the albums grid">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="{{ "assets/favicon.png" | relURL }}">
+  <link rel="apple-touch-icon" href="{{ "assets/apple-touch-icon.png" | relURL }}">
+  {{- /* Fingerprinted, so a new deploy never mixes a cached old stylesheet with new pages */}}
+  {{- $css := resources.Get "style.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+</head>
+<body>
+
+<div class="page{{ if .IsHome }} wide{{ end }}">
+  {{ partial "header.html" . }}
+  {{ block "main" . }}{{ end }}
+  {{ partial "footer.html" . }}
+</div>
+
+</body>
+</html>

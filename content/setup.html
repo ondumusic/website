@@ -1,0 +1,135 @@
+---
+title: Server setup
+heading: Setting up the server
+description: How to run the Ondu Server in Docker
+lead: "This guide is just one example of how to run the Ondu Server using Docker,
+but you can host it however you want on your own homelab server, NAS, anything."
+---
+    <ol class="timeline">
+      <li id="run">
+        <h2>Start the server</h2>
+        <p>Save this as <code>docker-compose.yml</code> and fill in three things:</p>
+        <ul>
+          <li>
+            <strong><code>ONDU_URL</code></strong>:
+            the address you'll use to reach the server. For example
+            <code>https://music.example.com</code>, or your Tailscale address.
+            Not sure yet? Leave the example for now and come back to it later.
+          </li>
+          <li>
+            <strong>The music path</strong>:
+            wherever your files are stored, read-only (<code>:ro</code>)
+          </li>
+        </ul>
+<pre><code>services:
+  ondu:
+    image: ghcr.io/ondumusic/server:latest
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      ONDU_URL: https://music.example.com
+    volumes:
+      - /path/to/your/music:/music:ro
+      - ./data:/data</code></pre>
+        <p>Then start it with <code>docker compose up -d</code>.</p>
+        <p class="muted small">Your music is mounted read-only (<code>:ro</code>), so Ondu can
+          never modify your files. The database, resized artwork and transcoded music cache all live in
+          <code>./data</code>. The server listens on port 4000; to use a different port, change
+          the first number. You can find more settings on the
+          <a href="config.html">configuration page</a>. Source code, releases and issues are on
+          {{< server-repo >}}.</p>
+      </li>
+
+      <li id="https">
+        <h2>Give it an HTTPS address</h2>
+        <p>The Ondu apps only work over HTTPS with a valid certificate, so plain
+          <code>http://</code> and self-signed certificates won't work. Here are two examples to get you started:</p>
+
+        <div class="tabs">
+          <div class="tablist" role="tablist" hidden>
+            <button type="button" role="tab" aria-controls="tailscale" aria-selected="true">
+              <strong>Tailscale</strong>
+              <span>Private to devices on your tailnet. No messy port-forwarding needed.</span>
+            </button>
+            <button type="button" role="tab" aria-controls="domain" aria-selected="false">
+              <strong>Your own domain</strong>
+              <span>Reachable from anywhere, no VPN. Needs ports 80 and 443.</span>
+            </button>
+          </div>
+
+          <div class="panel" id="tailscale" role="tabpanel">
+            <h3>Tailscale</h3>
+            <p class="muted summary">
+              Only the devices connected to your tailnet can reach the server.
+            </p>
+            <p>Tailscale needs to be enabled on your iPhone or Mac whenever you want to stream music from the server.</p>
+            <ol>
+              <li>Install <a href="https://tailscale.com">Tailscale</a> on the server and on your
+                devices, signed in to the same account.</li>
+              <li>In the admin console, under <strong>DNS</strong>, turn on <strong>MagicDNS</strong>
+                and <strong>HTTPS Certificates</strong>.</li>
+              <li>On the server, run:</li>
+            </ol>
+<pre><code>sudo tailscale serve --bg 4000</code></pre>
+            <p>It prints your address, something like <code>https://homeserver.tail1234.ts.net</code>.</p>
+          </div>
+
+          <div class="panel" id="domain" role="tabpanel">
+            <h3>Your own domain</h3>
+            <p class="muted summary">Reachable from anywhere, no VPN.</p>
+            <p>You'll need a domain, and ports 80 and 443 forwarded to the server.
+              Configure the DNS for your domain (or subdomain) at your IP and put a reverse proxy in front of Ondu. For example
+              <a href="https://caddyserver.com">Caddy</a> gets and renews the certificate by itself,
+              and this is its whole config:</p>
+<pre><code>music.example.com {
+    reverse_proxy localhost:4000
+}</code></pre>
+            <p class="muted small">Of course nginx, Traefik, Nginx Proxy Manager or other options work just as well. As long as it is reachable and has a valid certificate.</p>
+          </div>
+        </div>
+        <p>Once the address loads, check that <code>ONDU_URL</code> in your
+          <code>docker-compose.yml</code> is exactly this address. If you change it, run
+          <code>docker compose up -d</code> again to apply it.</p>
+      </li>
+
+      <li id="account">
+        <h2>Create your account</h2>
+        <p>Open your server's address in a browser. Fill in the username and password you'll
+          want to use in the apps. Then setup the library, leave the music directory as <code>/music</code> and continue, which will start scanning the library.</p>
+        <div class="steps">
+          <figure>
+            <img src="assets/screenshots/setup-account.webp" width="1056" height="1440" loading="lazy"
+              alt="Set up your account form with username, password and confirm password fields">
+          </figure>
+          <figure>
+            <img src="assets/screenshots/setup-library.webp" width="1056" height="1440" loading="lazy"
+              alt="Set up Ondu form with music directory, scan type and scan interval">
+          </figure>
+        </div>
+        <p class="note">If your server is publically accessible I recommend setting up your account immediately, as until an account exists it will remain in onboarding mode and it's first come, first serve.</p>
+      </li>
+
+      <li id="sign-in">
+        <h2>Sign in from the app</h2>
+        <p>Enter your server's address and the account you just created. Just the hostname is enough,
+          like <code>music.example.com</code>. The first sync copies your library metadata to the device, and after that only incremental changes are synced.</p>
+      </li>
+    </ol>
+
+  <script>
+    // Turn the two HTTPS options into tabs. Without JavaScript both are simply shown.
+    (() => {
+      const list = document.querySelector('.tablist');
+      const tabs = list.querySelectorAll('[role=tab]');
+      const select = tab => tabs.forEach(t => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', on);
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      tabs.forEach(t => t.addEventListener('click', () => select(t)));
+      list.hidden = false;
+      document.querySelector('.tabs').classList.add('js');
+      select(tabs[0]);
+    })();
+  </script>

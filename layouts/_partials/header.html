@@ -1,0 +1,10 @@
+<header class="top">
+  <a class="name" href="{{ "" | relURL }}"><img src="{{ "assets/app-icon.png" | relURL }}" alt=""><span>Ondu</span></a>
+  <nav>
+    {{- $page := . }}
+    {{- range site.Menus.main }}
+    <a href="{{ .URL }}"{{ if $page.IsMenuCurrent "main" . }} aria-current="page"{{ end }}>{{ .Name }}</a>
+    {{- end }}
+    {{ partial "github-icon.html" . }}
+  </nav>
+</header>

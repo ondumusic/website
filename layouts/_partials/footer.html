@@ -1,0 +1,26 @@
+<footer class="foot">
+  <div class="foot-top">
+    <div class="foot-brand">
+      <a class="name" href="{{ "" | relURL }}">Ondu</a>
+      <p>© {{ now.Year }} {{ partial "author.html" . }}</p>
+    </div>
+    <div class="foot-cols">
+      {{- range site.Menus.footer }}
+      <nav aria-label="{{ .Name }}">
+        <h2>{{ .Name }}</h2>
+        {{- range .Children }}
+        <a href="{{ .URL }}">{{ .Name }}</a>
+        {{- end }}
+        {{- if eq .Identifier "project" }}
+        {{ with site.Params.github }}<a href="{{ . }}">GitHub</a>{{ else }}<a href="#" class="todo">GitHub</a>{{ end }}
+        {{- end }}
+      </nav>
+      {{- end }}
+    </div>
+  </div>
+  <p class="credits">
+    Album artwork in the screenshots belong to their respective owners and are
+    shown for illustration only. Ondu isn't affiliated with or endorsed by any
+    of the artists or labels shown.
+  </p>
+</footer>

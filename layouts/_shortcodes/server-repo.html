@@ -1,0 +1,7 @@
+{{- /* Link to the server repository from hugo.toml. {{< server-repo "link text" >}} */ -}}
+{{- $text := .Get 0 | default "the server on GitHub" -}}
+{{- with site.Params.serverRepo -}}
+<a href="{{ . }}">{{ $text }}</a>
+{{- else -}}
+<a href="#" class="todo">{{ $text }}</a>
+{{- end -}}

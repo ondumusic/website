@@ -1,0 +1,3 @@
+{{- /* Who publishes the apps (the "I" in the privacy policy and terms), from hugo.toml.
+       Use in content as {{< publisher >}} */ -}}
+{{- with site.Params.publisher }}{{ . }}{{ else }}<span class="todo">Publisher</span>{{ end -}}

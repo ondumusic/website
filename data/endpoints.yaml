@@ -1,0 +1,14 @@
+# The endpoints shown in the API section of the home page (layouts/_partials/endpoints.html).
+# The full list is in the API reference, generated from static/openapi.json.
+- method: GET
+  path: /api/tracks
+  text: Paginate through all the tracks in your library
+- method: POST
+  path: /api/playlists
+  text: Create a playlist or a folder
+- method: PATCH
+  path: /api/playlists/{id}/items
+  text: Add, move or remove tracks in a playlist
+- method: PUT
+  path: /api/artists/{id}/artwork
+  text: Upload a photo for an artist

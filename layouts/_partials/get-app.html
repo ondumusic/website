@@ -1,0 +1,10 @@
+{{- /* Link to the app: the App Store once appStoreURL is set, TestFlight before that.
+       partial "get-app.html" "button" for the button style, anything else for a text link. */ -}}
+{{- $button := eq . "button" -}}
+{{- with site.Params.appStoreURL -}}
+<a {{ if $button }}class="button primary" {{ end }}href="{{ . }}">Download on the App Store</a>
+{{- else with site.Params.testflightURL -}}
+<a {{ if $button }}class="button primary" {{ end }}href="{{ . }}">{{ if $button }}Join the TestFlight beta{{ else }}Try the beta on TestFlight{{ end }}</a>
+{{- else -}}
+<span class="{{ if $button }}button {{ end }}">{{ if $button }}Coming soon{{ else }}Coming soon to the App Store{{ end }}</span>
+{{- end -}}

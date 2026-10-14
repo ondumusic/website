@@ -1,0 +1,20 @@
+{{- /* A collapsible FAQ entry. The answer is Markdown:
+       {{< question "How do I download music?" >}}Choose **Download** …{{< /question >}} */ -}}
+{{- $q := .Get 0 -}}
+<details class="qa" id="{{ $q | anchorize }}">
+  <summary>{{ $q | .Page.RenderString }}</summary>
+  <div class="answer">{{ .Inner | strings.TrimSpace | .Page.RenderString (dict "display" "block") }}</div>
+</details>
+{{- if not (.Page.Store.Get "qa-script") }}{{ .Page.Store.Set "qa-script" true }}
+<script>
+  // Open the question a link points to, like faq.html#i-forgot-my-password
+  (() => {
+    const open = () => {
+      const el = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el && el.tagName === 'DETAILS') { el.open = true; el.scrollIntoView(); }
+    };
+    addEventListener('hashchange', open);
+    addEventListener('DOMContentLoaded', open);
+  })();
+</script>
+{{- end }}
