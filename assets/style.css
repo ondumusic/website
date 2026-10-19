@@ -66,6 +66,7 @@ p, ul, ol { margin: 0 0 16px; }
 ul, ol { padding-left: 22px; }
 li { margin-bottom: 6px; }
 .muted { color: var(--muted); }
+.faint { color: var(--faint); }
 .small { font-size: 15px; }
 
 /* Home */
@@ -73,6 +74,16 @@ li { margin-bottom: 6px; }
 .intro .icon { width: 84px; height: 84px; margin-bottom: 28px; }
 .intro p { font-size: 19px; color: var(--muted); }
 .intro .get { font-size: 17px; margin-top: 24px; }
+/* Each link stays in one piece; on phones they stack instead (see the 480px rules) */
+.intro .get a { white-space: nowrap; }
+/* A drawn dot between the links: the font's own · and • come out tiny at this size */
+.intro .get .sep {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--faint); vertical-align: middle; margin: 0 12px 2px; font-size: 0;
+}
+/* A small note under the links; p.small so it beats .intro p, also in the mobile rules */
+.intro p.small { font-size: 15px; margin-top: -8px; }
+.intro p.faint { color: var(--faint); }
 .home h2 { margin-top: 0; }
 
 /* Hero: the Mac window with the iPhone in front of its lower right corner.
@@ -387,6 +398,11 @@ pre .c { color: #7b8294; }
 }
 
 /* Very narrow phones: keep the header on one line */
+@media (max-width: 480px) {
+  .intro .get { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .intro .get .sep { display: none; }
+}
+
 @media (max-width: 370px) {
   .top nav { gap: 12px; }
   .top .name span { display: none; }

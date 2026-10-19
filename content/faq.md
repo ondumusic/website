@@ -27,6 +27,14 @@ The Ondu Server does include a basic web-based player as well, so you can still
 enjoy your music on these platforms using your web browser.
 {{< /question >}}
 
+{{< question "Does this replace Spotify, Apple Music, etc?" >}}
+It depends. To stream your own music library on your devices definitely, but for
+music discovery, the social aspect and finding fun playlists and everything it
+is not.
+
+Personally I see it as two separate things that you can use side by side.
+{{< /question >}}
+
 {{< question "Does it work with CarPlay?" >}}
 Not yet, but it's on the list.
 {{< /question >}}

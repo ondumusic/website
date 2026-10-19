@@ -13,7 +13,7 @@ disableKinds = ["taxonomy", "term", "rss"]
   publisher = "Max"   # the "I" in the privacy policy and terms
   email = "support@ondumusic.com"
   appStoreURL = ""
-  testflightURL = ""
+  testflightURL = "https://testflight.apple.com/join/sxHk84cf"
   github = "https://github.com/ondumusic"
   serverRepo = "https://github.com/ondumusic/server"
 
